@@ -149,7 +149,7 @@ private:
         {
             d.invertColors();
         }
-        lcdint_t item_top = 8 + menu.top + (index - menu.scrollPosition) * d.getFont().getHeader().height;
+        lcdint_t item_top = 8 + menu.top + (index - menu.scrollPosition) * (d.getFont().getHeader().height + 8);
         uint16_t color = d.getColor();
         d.setColor(0x0000);
         d.fillRect(menu.left + 8 + d.getFont().getTextSize(menu.items[index]), item_top, menu.width + menu.left - 9,
@@ -168,7 +168,8 @@ template <typename D> void LcdGfxMenu::show(D &d)
     updateSize(d);
     d.drawRect(4 + menu.left, 4 + menu.top, menu.width + menu.left - 5, menu.height + menu.top - 5);
     menu.scrollPosition = this->calculateScrollPosition(d, menu.selection);
-    for ( uint8_t i = menu.scrollPosition; i < lcd_gfx_min(menu.count, (menu.scrollPosition + getMaxScreenItems(d))); i++ )
+    for ( uint8_t i = menu.scrollPosition; i < lcd_gfx_min(menu.count, (menu.scrollPosition + getMaxScreenItems(d)));
+          i++ )
     {
         this->drawMenuItem(d, i);
     }
