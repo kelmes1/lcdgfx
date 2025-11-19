@@ -51,7 +51,7 @@ public:
      * @param data variable argument list, accepted by platform interface (PlatformI2c, PlatformSpi)
      */
     template <typename... Args>
-    InterfaceSH1106(NanoDisplayBase<InterfaceSH1106<I>> &base, int8_t dc, Args &&... data)
+    InterfaceSH1106(NanoDisplayBase<InterfaceSH1106<I>> &base, int8_t dc, Args &&...data)
         : I(data...)
         , m_dc(dc)
         , m_base(base)
@@ -169,6 +169,7 @@ private:
     uint8_t m_startLine = 0;
     uint8_t m_column = 0;
     uint8_t m_page = 0;
+    uint8_t m_flipHorizontal = 0; ///< horizontal flip state
 };
 /**
  * Class implements basic functions for 1-bit mode of SH1106-based displays
@@ -281,7 +282,7 @@ public:
      * @param data variable argument list for custom user spi interface.
      */
     template <typename... Args>
-    DisplaySH1106_128x64_CustomSPI(int8_t rstPin, int8_t dcPin, Args &&... data)
+    DisplaySH1106_128x64_CustomSPI(int8_t rstPin, int8_t dcPin, Args &&...data)
         : DisplaySH1106_128x64<InterfaceSH1106<I>>(m_spi, rstPin)
         , m_spi(*this, dcPin, data...)
     {
@@ -358,7 +359,7 @@ public:
      * @param data variable argument list for custom user i2c interface.
      */
     template <typename... Args>
-    DisplaySH1106_128x64_CustomI2C(int8_t rstPin, Args &&... data)
+    DisplaySH1106_128x64_CustomI2C(int8_t rstPin, Args &&...data)
         : DisplaySH1106_128x64<InterfaceSH1106<I>>(m_i2c, rstPin)
         , m_i2c(*this, -1, data...)
     {

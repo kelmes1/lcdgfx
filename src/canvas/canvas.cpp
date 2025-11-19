@@ -117,10 +117,14 @@ template <uint8_t BPP> void NanoCanvasOps<BPP>::drawCircle(lcdint_t xc, lcdint_t
     lcdint_t x = 0;
     lcdint_t y = r;
 
-    if (options & (2+4)) putPixel(xc, yc + r);
-    if (options & (1+8)) putPixel(xc, yc - r);
-    if (options & (1+2)) putPixel(xc + r, yc);
-    if (options & (4+8)) putPixel(xc - r, yc);
+    if ( options & (2 + 4) )
+        putPixel(xc, yc + r);
+    if ( options & (1 + 8) )
+        putPixel(xc, yc - r);
+    if ( options & (1 + 2) )
+        putPixel(xc + r, yc);
+    if ( options & (4 + 8) )
+        putPixel(xc - r, yc);
     while ( y >= x )
     {
         x++;
@@ -131,14 +135,22 @@ template <uint8_t BPP> void NanoCanvasOps<BPP>::drawCircle(lcdint_t xc, lcdint_t
         }
         d += 4 * x + 6;
 
-        if (options & (2)) putPixel(xc + x, yc + y);
-        if (options & (4)) putPixel(xc - x, yc + y);
-        if (options & (1)) putPixel(xc + x, yc - y);
-        if (options & (8)) putPixel(xc - x, yc - y);
-        if (options & (2)) putPixel(xc + y, yc + x);
-        if (options & (4)) putPixel(xc - y, yc + x);
-        if (options & (1)) putPixel(xc + y, yc - x);
-        if (options & (8)) putPixel(xc - y, yc - x);
+        if ( options & (2) )
+            putPixel(xc + x, yc + y);
+        if ( options & (4) )
+            putPixel(xc - x, yc + y);
+        if ( options & (1) )
+            putPixel(xc + x, yc - y);
+        if ( options & (8) )
+            putPixel(xc - x, yc - y);
+        if ( options & (2) )
+            putPixel(xc + y, yc + x);
+        if ( options & (4) )
+            putPixel(xc - y, yc + x);
+        if ( options & (1) )
+            putPixel(xc + y, yc - x);
+        if ( options & (8) )
+            putPixel(xc - y, yc - x);
     }
 }
 
@@ -225,10 +237,10 @@ void NanoCanvasOps<BPP>::printFixedPgm(lcdint_t xpos, lcdint_t y, const char *ch
 #ifdef CONFIG_MULTIPLICATION_NOT_SUPPORTED
 // compiler optimizes multiplication correctly itself
 #define YADDR1(y) (static_cast<uint16_t>((y) >> 3) * m_w)
-#define BANK_ADDR1(b) ((b)*m_w)
+#define BANK_ADDR1(b) ((b) * m_w)
 #else
 #define YADDR1(y) (static_cast<uint16_t>((y) >> 3) * m_w)
-#define BANK_ADDR1(b) ((b)*m_w)
+#define BANK_ADDR1(b) ((b) * m_w)
 #endif
 
 template <> void NanoCanvasOps<1>::putPixel(lcdint_t x, lcdint_t y)
@@ -412,7 +424,8 @@ template <> void NanoCanvasOps<1>::drawBitmap1(lcdint_t x, lcdint_t y, lcduint_t
         w += x;
         x = 0;
     }
-    uint8_t max_pages = (lcduint_t)(h + 15 - offs) >> 3;
+    lcduint_t original_h = h;
+    uint8_t max_pages = (lcduint_t)(original_h + 7) >> 3;
     if ( (lcduint_t)(y + (lcdint_t)h) > (lcduint_t)m_h )
     {
         h = (lcduint_t)(m_h - (lcduint_t)y);
@@ -428,8 +441,8 @@ template <> void NanoCanvasOps<1>::drawBitmap1(lcdint_t x, lcdint_t y, lcduint_t
     for ( j = 0; j < pages; j++ )
     {
         uint16_t addr = YADDR1(y + ((uint16_t)j << 3)) + x;
-        if ( j == max_pages - 1 )
-            mainFlag = !offs;
+        if ( j >= max_pages )
+            mainFlag = 0;
         for ( i = w; i > 0; i-- )
         {
             uint8_t data = 0;
